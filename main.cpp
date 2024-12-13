@@ -8,11 +8,55 @@
 
 #include <iostream>
 
-int main() {
-   glfwInit();
+constexpr auto WIDTH = 800;
+constexpr auto HEIGHT = 600;
 
-   glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-   auto window = glfwCreateWindow(800, 600, "Vulkan window", nullptr, nullptr);
+class HelloTriangleApplication {
+public:
+   void run() {
+      initWindow();
+      initVulkan();
+      mainLoop();
+      cleanup();
+   }
+private:
+   GLFWwindow* window;
+
+   void initWindow() {
+      glfwInit();
+      glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+      glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+      window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
+   }
+
+   void initVulkan() {
+
+   }
+
+   void mainLoop() {
+      while (!glfwWindowShouldClose(window)) {
+         glfwPollEvents();
+      }
+   }
+
+   void cleanup() {
+      glfwDestroyWindow(window);
+      glfwTerminate();
+   }
+};
+
+int main() {
+   HelloTriangleApplication app;
+
+   try {
+      app.run();
+   }
+   catch (const std::exception& e) {
+      std::cerr << e.what() << std::endl;
+      return EXIT_FAILURE;
+   }
+
+   return EXIT_SUCCESS;
 
    uint32_t extensionCount = 0;
    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
@@ -22,14 +66,4 @@ int main() {
    glm::mat4 matrix;
    glm::vec4 vec;
    auto test = matrix * vec;
-
-   while (!glfwWindowShouldClose(window)) {
-      glfwPollEvents();
-   }
-
-   glfwDestroyWindow(window);
-
-   glfwTerminate();
-
-   return 0;
 }
